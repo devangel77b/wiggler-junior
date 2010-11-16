@@ -36,7 +36,7 @@ class WindTunnel:
         time.sleep(3)
 
         print 'Biasing - do not bump'
-        y = self.DAQ.acquire(samples=100) # zero the sensor
+        y = self.DAQ.acquire(samples=200) # zero the sensor
         meany = numpy.mean(y, axis=0)
         self.Cal.bias(meany)
 
@@ -52,7 +52,7 @@ class WindTunnel:
 
         self.Sting.fan(0) # secure fan
         print 'Data collected, coasting down'
-        time.sleep(10)
+        time.sleep(20)
 #        return(self.currentdata)
 
     def save(self,filename):
