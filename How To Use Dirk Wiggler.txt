@@ -1,0 +1,40 @@
+1.  Open the Dirk Wiggler folder on the desktop if it is not already open. Check that the wind tunnel switch is OFF. 
+
+
+
+2.  Right click "diggler" and select "Edit with IDLE".  Two windows will open, diggler.py and a Python shell.  Go into the Python shell. 
+
+
+
+3.  Import diggler as follows:
+
+>>> import diggler
+
+
+
+4.  Create a Replicates object:
+
+>>> myreplicates = diggler.Replicates("mymodelname",5)
+
+Where the model name will be mymodelname and it will do 5 replicates.
+
+
+
+5.  Zero the model and check its position is zero and that it is placed in the tunnel correctly:
+
+>>> myreplicates.tunnel.Sting.gohome()
+
+
+
+6.  If you are happy with everything, turn the wind tunnel switch to ON and tell the Replicates object to go:
+
+>>> myreplicates.go()
+
+It will automatically do -15 to 90, 5 replicates, placing them in separate directories on the desktop and using the file naming convention. 
+
+
+
+6.  When done, add the directory names into the log. 
+
+
+
