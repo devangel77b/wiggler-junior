@@ -33,7 +33,7 @@ class WindTunnel:
 
     def takedata(self,angle=0):
         self.Sting.move(angle) # set angle
-        time.sleep(3)
+        time.sleep(5)
 
         print 'Biasing - do not bump'
         y = self.DAQ.acquire(samples=100) # zero the sensor
@@ -52,7 +52,7 @@ class WindTunnel:
 
         self.Sting.fan(0) # secure fan
         print 'Data collected, coasting down'
-        time.sleep(15)
+        time.sleep(17)
 #        return(self.currentdata)
 
     def save(self,filename):
@@ -78,6 +78,8 @@ class Replicates:
         self.reps = range(self.number)
         self.currentdir = None
         self.tunnel = WindTunnel()
+        self.tunnel.Sting.move(0)
+        self.tunnel.Sting.gohome()
 
     def warmup(self):
         print "Warming up fan"
