@@ -109,8 +109,8 @@ class Replicates:
                 self.tunnel.takedata(b)
                 filename = self.currentdir+self.modelname+"_"+str(b)+".csv"
                 self.tunnel.save(filename)
-            print "Completed run {0}".format(a)
-            twitterstatus = "Completed replicate {0} of {1} for {2}".format(a,self.number, self.modelname)
+            print "Completed run {0}".format(a+1)
+            twitterstatus = "Completed replicate {0} of {1} for {2}".format(a+1,self.number, self.modelname)
             api.update_status(twitterstatus)
 
         print "Completed {0} runs for {1}".format(self.number, self.modelname)
