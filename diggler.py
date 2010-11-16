@@ -58,15 +58,13 @@ class WindTunnel:
         print 'Collecting data'
         y = self.DAQ.acquire() # collect the actual points
         self.currentdata = self.Cal(y) # apply calibration
-        # apply averaging?? 
-
+     
         self.Sting.fan(0) # secure fan
         print 'Data collected, coasting down'
         time.sleep(17)
-#        return(self.currentdata)
 
     def save(self,filename):
-        headertxt = "Force X (N),Force Y (N),Force Z (N), Torque X (N-mm), Torque Y (N-mm), Torque Z (N-mm), Frequency = 1000, Averaging Level = 16, F/T Sensor = FT7695, Time Started = " + time.strftime("%m/%d%Y %H:%M:%S") + "\n"
+        headertxt = "Force X (N),Force Y (N),Force Z (N), Torque X (N-mm), Torque Y (N-mm), Torque Z (N-mm), Frequency = 1000, Averaging Level = 8, F/T Sensor = FT7695, Time Started = " + time.strftime("%m/%d%Y %H:%M:%S") + "\n"
         f = open(filename,'w')
         f.write(headertxt)
         numpy.savetxt(f,self.currentdata,delimiter=',')
@@ -95,14 +93,14 @@ class Replicates:
         print "Warming up fan"
         print "Use hot wire anemometer to check speed in range 5-6 m/s"
         self.tunnel.Sting.fan(1)
-        time.sleep(120)
+        time.sleep(20)
         self.tunnel.Sting.fan(0)
-        
+
     def go(self):
 
         print "Commencing runs."
-		twitterstatus = "Commencing {0} runs of {1}".format(self.number, self.modelname)
-		api.update_status(twitterstatus)
+        twitterstatus = "Commencing {0} runs of {1}".format(self.number, self.modelname)
+        api.update_status(twitterstatus)
         for a in self.reps:
             print "Starting run %d"%(a)
             self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
@@ -111,20 +109,20 @@ class Replicates:
                 self.tunnel.takedata(b)
                 filename = self.currentdir+self.modelname+"_"+str(b)+".csv"
                 self.tunnel.save(filename)
-            print "Completed run {0}".format(self.currentdir)
-			twitterstatus = "Completed run {0} of {1} for {2}".format(a,self.number, self.modelname)
-			api.update_status(twitterstatus)
+            print "Completed run {0}".format(a)
+            twitterstatus = "Completed replicate {0} of {1} for {2}".format(a,self.number, self.modelname)
+            api.update_status(twitterstatus)
 
         print "Completed {0} runs for {1}".format(self.number, self.modelname)
-		twitterstatus = "Completed {0} runs of {1}".format(self.number, self.modelname)
-		api.update_status(twitterstatus)
+        twitterstatus = "Completed {0} runs of {1}".format(self.number, self.modelname)
+        api.update_status(twitterstatus)
 
     def __del__(self):
         self.tunnel = None
         print "Replicates object garbage collected."
-        
 
 
-                
-            
-        
+
+																																
+																
+
