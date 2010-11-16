@@ -37,7 +37,7 @@ def CHK(err):
 class DAQcard():
     '''NI E6231 DAQ connected to ATI Nano17.'''
     
-    def __init__(self, sampling_frequency=1000.0, samples=3000, averaging=16):
+    def __init__(self, sampling_frequency=1000.0, samples=1000, averaging=8):
         '''Constructor for a DAQ object.'''
         self.sampling_frequency = sampling_frequency
         self.samples = samples
@@ -87,7 +87,7 @@ class DAQcard():
 
         for a in range(samples):
             self.data[a] = numpy.mean(temp[a:(a+self.averaging),:],axis=0)
-        print self.data
+        #print self.data
 
         if self.taskHandle.value != 0:
             CHK(nidaq.DAQmxStopTask(self.taskHandle))
