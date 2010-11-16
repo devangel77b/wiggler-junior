@@ -13,6 +13,16 @@ import ati_ft
 import time
 import os
 
+# Setup twitter notification of completion
+import tweepy
+CONSUMER_KEY = 'LOJKetFhrPE4rBrYG5AbA'
+CONSUMER_SECRET = 'yQrDO3seLdhQet8tpkpZYYSfqGXlXKAquII41iANg'
+ACCESS_KEY = '216454340-xeb7SHIZcIBEUdVARkw0ru6GzqfYh9jAgkFI9Hy6'
+ACCESS_SECRET = 'g5aLIf8dPUDEdTYH4cpxUk3iuMDh0DCEUQcloIDw'
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+api = tweepy.API(auth)
+
 # None of these work so I wrote my own. 
 #atidaqft = ctypes.windll.LoadLibrary('C:\\Program Files\\ATI Industrial Automation\\ATIDAQFT.NET\\atidaqft.dll')
 #aticdaqft = ctypes.windll.LoadLibrary('C:\\Program Files\\ATI Industrial Automation\\ATIDAQFT.NET\\ATICombinedDAQFT.dll')
@@ -91,6 +101,8 @@ class Replicates:
     def go(self):
 
         print "Commencing runs."
+		twitterstatus = "Commencing {0} runs of {1}".format(self.number, self.modelname)
+		api.update_status(twitterstatus)
         for a in self.reps:
             print "Starting run %d"%(a)
             self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
@@ -100,7 +112,12 @@ class Replicates:
                 filename = self.currentdir+self.modelname+"_"+str(b)+".csv"
                 self.tunnel.save(filename)
             print "Completed run {0}".format(self.currentdir)
+			twitterstatus = "Completed run {0} of {1} for {2}".format(a,self.number, self.modelname)
+			api.update_status(twitterstatus)
+
         print "Completed {0} runs for {1}".format(self.number, self.modelname)
+		twitterstatus = "Completed {0} runs of {1}".format(self.number, self.modelname)
+		api.update_status(twitterstatus)
 
     def __del__(self):
         self.tunnel = None
