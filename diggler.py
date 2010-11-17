@@ -99,7 +99,7 @@ class Replicates:
     def go(self):
 
         print "Commencing runs."
-        twitterstatus = "Commencing {0} runs of {1}".format(self.number, self.modelname)
+        twitterstatus = "Starting {0} runs of {1}".format(self.number, self.modelname)
         api.update_status(twitterstatus)
         for a in self.reps:
             print "Starting run %d"%(a)
@@ -114,7 +114,7 @@ class Replicates:
             api.update_status(twitterstatus)
 
         print "Completed {0} runs for {1}".format(self.number, self.modelname)
-        twitterstatus = "Completed {0} runs of {1}".format(self.number, self.modelname)
+        twitterstatus = "Completed {0} runs of {1}.  Please load a new model.".format(self.number, self.modelname)
         api.update_status(twitterstatus)
 
     def __del__(self):
