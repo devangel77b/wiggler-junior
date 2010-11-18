@@ -129,15 +129,6 @@ class yawReplicates(Replicates):
         self.tunnel.Sting.mount_angle = -90
         print "yawReplicates object created"
 
-    def go():
-        print "Commencing yaw runs."
-        twitterstatus = "Starting {0} yaw runs of {1}".format(self.number, self.modelname)
-        api.update_status(twitterstatus)
-        Replicates.go()
-        print "Completed {0} yaw runs for {1}.".format(self.number, self.modelname)
-        twitterstatus = "Completed {0} yaw runs of {1}.  Please load a new model.".format(self.number, self.modelname)
-        api.update_status(twitterstatus)
-
     def __del__(self):
         print "Garbage collecting yaw replicates object"
         
