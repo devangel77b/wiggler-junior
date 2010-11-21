@@ -124,7 +124,7 @@ class Replicates:
 
 
 class yawReplicates(Replicates):
-    def __init__(self,modelname="test",number=5,angles=range(-30,30,5)):
+    def __init__(self,modelname="test",number=5,angles=range(-30,35,5)):
         Replicates.__init__(self,modelname,number,angles)
         self.tunnel.Sting.mount_angle = -90
         print "yawReplicates object created"
