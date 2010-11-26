@@ -36,7 +36,7 @@ class WindTunnel:
         self.DAQ = daq5.DAQcard()
         self.Sting = dinosting.DinoSting(mount_angle=-15)
         self.Sting.gohome()
-        self.Cal = ati_ft.ATIft('FT7695.cal')
+        self.Cal = ati_ft.ATIft('FT10452.cal')
         self.currentdata = None
         self.startuptime = 15
         print 'WindTunnel object created'
