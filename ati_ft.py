@@ -4,7 +4,7 @@ import xml.dom.minidom
 import numpy
 
 class ATIft:
-    def __init__(self,calfilename='FT7695.cal'):
+    def __init__(self,calfilename='FT10452.cal'):
         print 'Created ATIft object'
         self.calfilename = calfilename
 
