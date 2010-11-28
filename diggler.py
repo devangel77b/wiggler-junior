@@ -99,8 +99,8 @@ class Replicates:
     def go(self):
 
         print "Commencing runs."
-        twitterstatus = "Starting {0} runs of {1}".format(self.number, self.modelname)
-        api.update_status(twitterstatus)
+     #   twitterstatus = "Starting {0} runs of {1}".format(self.number, self.modelname)
+     #   api.update_status(twitterstatus)
         for a in self.reps:
             print "Starting run %d"%(a)
             self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
@@ -110,8 +110,8 @@ class Replicates:
                 filename = self.currentdir+self.modelname+"_"+str(b)+".csv"
                 self.tunnel.save(filename)
             print "Completed run {0}".format(a+1)
-            twitterstatus = "Completed replicate {0} of {1} for {2}".format(a+1,self.number, self.modelname)
-            api.update_status(twitterstatus)
+    #        twitterstatus = "Completed replicate {0} of {1} for {2}".format(a+1,self.number, self.modelname)
+    #        api.update_status(twitterstatus)
 
         print "Completed {0} runs for {1}".format(self.number, self.modelname)
         twitterstatus = "Completed {0} runs of {1}.  Please load a new model.".format(self.number, self.modelname)
