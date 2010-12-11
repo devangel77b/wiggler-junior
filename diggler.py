@@ -134,5 +134,53 @@ class yawReplicates(Replicates):
         
                                                            
 																																
-																
+class reynoldsReplicates(Replicates):
+    def __init__(self,modelname="test",number=5,angles=[30],speeds=range(10,110,10)):
+        Replicates.__init__(self,modelname,number,angles)
+        self.speeds = speeds
+        self.tunnel.Sting.mount_angle = -15
+        print "reynoldsReplicates object created"
 
+    def __del__(self):
+        print "Garbage collecting reynolds replicates object"
+
+    def go(self):
+
+        print "Commencing runs."
+        self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
+        os.mkdir(self.currentdir)
+
+        for a in self.speeds:
+            print "Please set dial to %d."%(a)
+            dial = int(raw_input('dial = ?'))
+
+            self.tunnel.Sting.move(30) # set angle
+            time.sleep(5)
+
+            print 'Biasing - do not bump'
+            y = self.tunnel.DAQ.acquire(samples=100) # zero the sensor
+            meany = numpy.mean(y, axis=0)
+            self.tunnel.Cal.bias(meany)
+
+            self.tunnel.Sting.fan(1) # turn on the fan
+            print 'Waiting %d seconds for fan to startup' %(self.tunnel.startuptime)
+            print 'Be sure to check wind speed with anemometer'
+            time.sleep(self.tunnel.startuptime) # Wait for fan to start up
+                    
+            for b in range(97,102):
+               
+                print 'Collecting data'
+                y = self.tunnel.DAQ.acquire() # collect the actual points
+                self.tunnel.currentdata = self.tunnel.Cal(y) # apply calibration
+                filename = self.currentdir+chr(b)+self.modelname+"_"+str(dial)+".csv"
+                self.tunnel.save(filename)
+    
+            print "Completed run at dial {0}".format(a)
+    
+        self.tunnel.Sting.fan(0) # secure fan
+        print 'Data collected, coasting down'
+        time.sleep(17)
+        print "Completed {0} runs for {1}".format(self.number, self.modelname)
+       # twitterstatus = "Completed {0} runs of {1}.  Please load a new model.".format(self.number, self.modelname)
+       # api.update_status(twitterstatus)
+        
