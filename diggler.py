@@ -149,18 +149,18 @@ class reynoldsReplicates(Replicates):
         print "Commencing runs."
         self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
         os.mkdir(self.currentdir)
+        
+        self.tunnel.Sting.move(30) # set angle
+        time.sleep(5)
+
+        print 'Biasing - do not bump'
+        y = self.tunnel.DAQ.acquire(samples=100) # zero the sensor
+        meany = numpy.mean(y, axis=0)
+        self.tunnel.Cal.bias(meany)
 
         for a in self.speeds:
             print "Please set dial to %d."%(a)
             dial = int(raw_input('dial = ?'))
-
-            self.tunnel.Sting.move(30) # set angle
-            time.sleep(5)
-
-            print 'Biasing - do not bump'
-            y = self.tunnel.DAQ.acquire(samples=100) # zero the sensor
-            meany = numpy.mean(y, axis=0)
-            self.tunnel.Cal.bias(meany)
 
             self.tunnel.Sting.fan(1) # turn on the fan
             print 'Waiting %d seconds for fan to startup' %(self.tunnel.startuptime)
