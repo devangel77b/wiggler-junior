@@ -131,7 +131,16 @@ class yawReplicates(Replicates):
 
     def __del__(self):
         print "Garbage collecting yaw replicates object"
-        
+
+
+class rollReplicates(Replicates):
+    def __init__(self,modelname="test",number=5,angles=range(-60,65,5)):
+        Replicates.__init__(self,modelname,number,angles)
+        self.tunnel.Sting.mount_angle = -90
+        print "rollReplicates object created"
+
+    def __del__(self):
+        print "Garbage collecting roll replicates object"   
                                                            
 																																
 class reynoldsReplicates(Replicates):
