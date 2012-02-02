@@ -41,7 +41,7 @@ class WindTunnel:
         self.startuptime = 15
         print 'WindTunnel object created'
 
-    def takedata(self,angle=0):
+    def takedata(self,angle=0,speed=1):
         self.Sting.move(angle) # set angle
         time.sleep(5)
 
@@ -50,7 +50,7 @@ class WindTunnel:
         meany = numpy.mean(y, axis=0)
         self.Cal.bias(meany)
 
-        self.Sting.fan(1) # turn on the fan
+        self.Sting.fan(speed) # turn on the fan
 
         print 'Waiting %d seconds for fan to startup' %(self.startuptime)
         time.sleep(self.startuptime) # Wait for fan to start up
@@ -79,7 +79,7 @@ class WindTunnel:
 
 
 class Replicates:
-    def __init__(self,modelname="test",number=5,angles=range(-15,95,5)):
+    def __init__(self,modelname="test",number=5,angles=range(-15,95,5),speed=1):
         self.modelname = modelname
         self.number = number
         self.angles = angles
@@ -88,11 +88,12 @@ class Replicates:
         self.tunnel = WindTunnel()
         self.tunnel.Sting.move(0)
         self.tunnel.Sting.gohome()
+        self.speed = speed
 
     def warmup(self):
         print "Warming up fan"
         print "Use hot wire anemometer to check speed in range 5-6 m/s"
-        self.tunnel.Sting.fan(1)
+        self.tunnel.Sting.fan(speed)
         time.sleep(20)
         self.tunnel.Sting.fan(0)
 
@@ -106,7 +107,7 @@ class Replicates:
             self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
             os.mkdir(self.currentdir)
             for b in self.angles:
-                self.tunnel.takedata(b)
+                self.tunnel.takedata(b,speed=self.speed)
                 filename = self.currentdir+self.modelname+"_"+str(b)+".csv"
                 self.tunnel.save(filename)
             print "Completed run {0}".format(a+1)
@@ -124,7 +125,7 @@ class Replicates:
 
 
 class yawReplicates(Replicates):
-    def __init__(self,modelname="test",number=5,angles=range(-30,35,5)):
+    def __init__(self,modelname="test",number=5,angles=range(-30,35,5),speed=1):
         Replicates.__init__(self,modelname,number,angles)
         self.tunnel.Sting.mount_angle = -90
         print "yawReplicates object created"
@@ -135,7 +136,7 @@ class yawReplicates(Replicates):
                                                            
 																																
 class reynoldsReplicates(Replicates):
-    def __init__(self,modelname="test",number=5,angles=[30],speeds=range(10,110,10)):
+    def __init__(self,modelname="test",number=5,angles=[30],speeds=[1]):
         Replicates.__init__(self,modelname,number,angles)
         self.speeds = speeds
         self.tunnel.Sting.mount_angle = -15
@@ -158,11 +159,13 @@ class reynoldsReplicates(Replicates):
         meany = numpy.mean(y, axis=0)
         self.tunnel.Cal.bias(meany)
 
-        for a in self.speeds:
-            print "Please set dial to %d."%(a)
-            dial = int(raw_input('dial = ?'))
+        for a in range(len(self.speeds)):
+            # print "Please set dial to %d."%(a)
+            # dial = int(raw_input('dial = ?'))
+            
+            dial = self.speeds[a]
 
-            self.tunnel.Sting.fan(1) # turn on the fan
+            self.tunnel.Sting.fan(dial) # turn on the fan
             print 'Waiting %d seconds for fan to startup' %(self.tunnel.startuptime)
             print 'Be sure to check wind speed with anemometer'
             time.sleep(self.tunnel.startuptime) # Wait for fan to start up

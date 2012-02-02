@@ -23,8 +23,6 @@ class DinoSting:
     START = chr(255) # Start byte code
     SERVO = chr(1)   # Servo byte code
     FAN = chr(2)     # Fan byte code
-    FANON = chr(1)   # Turn fan on
-    FANOFF = chr(0)  # Turn fan off
 
     def __init__(self,port='COM4',mount_angle=0):
         ''' DinoSting constructor takes port (default COM4) and mount angle.'''
@@ -54,17 +52,18 @@ between 0 and 180 degrees.'''
 
 
     def fan(self,state=0):
-        '''Sets the wind tunnel on or off'''
-        if (state == 1):
-            print 'Fan running.'
+        '''Changes the speed of the fan'''
+        
+        if (state != 0):
+            print 'Fan running at %d/255 of maximum speed.' % (state)
             self.ser.write(DinoSting.START)
             self.ser.write(DinoSting.FAN)
-            self.ser.write(DinoSting.FANON)
+            self.ser.write(chr(state))
         else:
             print 'Fan secured.'
             self.ser.write(DinoSting.START)
             self.ser.write(DinoSting.FAN)
-            self.ser.write(DinoSting.FANOFF)
+            self.ser.write(chr(state))
 
 
     def gohome(self):
