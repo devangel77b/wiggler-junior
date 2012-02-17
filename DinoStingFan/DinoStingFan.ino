@@ -29,13 +29,14 @@ int minPulse = 850;   // us, minimum servo position 0 degrees
 int maxPulse = 1900;  // us, maximum servo position 180 degrees
 int ServoPin = 9;     // Servo is connected to Pin 9 on Dirk Board
 
-int   FanPin = 11;    // Fan relay is connected to Pin 11.
+int   FanPin = 5;    // Fan relay is connected to Pin 5.
 
 
 // User input for servo and position
 int userInput[3];     // Raw input from serial buffer, 3 bytes
 int startbyte;        // start byte, begin reading input
 int whichdevice;      // which device to use
+int fanspeed;         // speed to set the fan
 int pos;              // servo position, angle 0-180
 int i;                // iterator
 
@@ -48,9 +49,8 @@ void setup()
   // Attaches servo to pin 9 and sets pulse timing for Hitec
   
   pinMode(FanPin,OUTPUT);
-  pinMode(MotorPin,OUTPUT);
   
-  // Sets fan as an output pin 13
+  // Sets fan as an output pin 11
   
   Serial.begin(9600);
   // Establishes serial connection with main computer
@@ -72,9 +72,9 @@ void loop()
       }
       
       whichdevice = userInput[0];
-      fanspeed = userInput[1];
+      pos = userInput[1];
       
-      if (pos==255) {whichdevice = 255;}
+      //if (pos==255) {whichdevice = 255;}
       
       switch(whichdevice){
         case 1: // servo positioning command
@@ -82,7 +82,7 @@ void loop()
           break;
           
         case 2: // fan relay command
-          analogWrite(FanPin,fanspeed); // change fan speed
+          analogWrite(FanPin,pos); // change fan speed
           break;
       } // switch servo
     } // if start byte detected

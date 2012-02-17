@@ -23,9 +23,10 @@ class DinoSting:
     START = chr(255) # Start byte code
     SERVO = chr(1)   # Servo byte code
     FAN = chr(2)     # Fan byte code
+    RESET = chr(3)   # Arduino reset code / shuts down fan
 
-    def __init__(self,port='COM4',mount_angle=0):
-        ''' DinoSting constructor takes port (default COM4) and mount angle.'''
+    def __init__(self,port='COM3',mount_angle=0):
+        ''' DinoSting constructor takes port (default COM3) and mount angle.'''
         self.mount_angle = mount_angle
         try:
             self.ser = serial.Serial(port, timeout = 1)
@@ -56,14 +57,15 @@ between 0 and 180 degrees.'''
         
         if (state != 0):
             print 'Fan running at %d/255 of maximum speed.' % (state)
+            fanSpeed = chr(state)
             self.ser.write(DinoSting.START)
             self.ser.write(DinoSting.FAN)
-            self.ser.write(chr(state))
+            self.ser.write(fanSpeed)
         else:
             print 'Fan secured.'
             self.ser.write(DinoSting.START)
             self.ser.write(DinoSting.FAN)
-            self.ser.write(chr(state))
+            self.ser.write(chr(0))
 
 
     def gohome(self):
