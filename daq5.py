@@ -29,7 +29,7 @@ def CHK(err):
     '''Check the return code of a NIDAQmx Base library call and throw
     an execption if it indicates failure.'''
     if err < 0:
-        buff_size = 2048
+        buf_size = 2048
         buf = ctypes.create_string_buffer('\000'*buf_size)
         nidaq.DAQmxGetExtendedErrorInfo(ctypes.byref(buf),buf_size)
         raise RuntimeError('nidaq call failed with error %d: %s'%(err,repr(buf.value)))

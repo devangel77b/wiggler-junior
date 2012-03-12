@@ -34,14 +34,14 @@ api = tweepy.API(auth)
 class WindTunnel:
     def __init__(self):
         self.DAQ = daq5.DAQcard()
-        self.Sting = dinosting.DinoSting(mount_angle=-15)
+        self.Sting = dinosting.DinoSting(mount_angle=0)
         self.Sting.gohome()
         self.Cal = ati_ft.ATIft('FT10452.cal')
         self.currentdata = None
         self.startuptime = 15
         print 'WindTunnel object created'
 
-    def takedata(self,angle=0,speed=1):
+    def takedata(self,speed,angle=0):
         self.Sting.move(angle) # set angle
         time.sleep(5)
 
@@ -79,7 +79,7 @@ class WindTunnel:
 
 
 class Replicates:
-    def __init__(self,modelname="test",number=5,angles=range(-15,95,5),speed=1):
+    def __init__(self,modelname="test",number=5,angles=range(-15,95,5),speed=0):
         self.modelname = modelname
         self.number = number
         self.angles = angles
@@ -93,7 +93,7 @@ class Replicates:
     def warmup(self):
         print "Warming up fan"
         print "Use hot wire anemometer to check speed in range 5-6 m/s"
-        self.tunnel.Sting.fan(speed)
+        self.tunnel.Sting.fan(self.speed)
         time.sleep(20)
         self.tunnel.Sting.fan(0)
 
@@ -104,11 +104,11 @@ class Replicates:
      #   api.update_status(twitterstatus)
         for a in self.reps:
             print "Starting run %d"%(a)
-            self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
+            self.currentdir = "C:\\Users\\Dudley\\Desktop\\wiggler-junior\\RESULTS\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
             os.mkdir(self.currentdir)
             for b in self.angles:
-                self.tunnel.takedata(b,speed=self.speed)
-                filename = self.currentdir+self.modelname+"_"+str(b)+".csv"
+                self.tunnel.takedata(self.speed,b)
+                filename = self.currentdir+self.modelname+"_n"+str(a)+"_a"+str(b)+"_s"+str(self.speed)+".csv"
                 self.tunnel.save(filename)
             print "Completed run {0}".format(a+1)
     #        twitterstatus = "Completed replicate {0} of {1} for {2}".format(a+1,self.number, self.modelname)
@@ -125,8 +125,8 @@ class Replicates:
 
 
 class yawReplicates(Replicates):
-    def __init__(self,modelname="test",number=5,angles=range(-30,35,5),speed=1):
-        Replicates.__init__(self,modelname,number,angles)
+    def __init__(self,modelname="test",number=5,angles=range(-30,35,5),speed=0):
+        Replicates.__init__(self,modelname,number,angles,speed)
         self.tunnel.Sting.mount_angle = -90
         print "yawReplicates object created"
 
@@ -136,10 +136,11 @@ class yawReplicates(Replicates):
                                                            
 																																
 class reynoldsReplicates(Replicates):
-    def __init__(self,modelname="test",number=5,angles=[30],speeds=[1]):
-        Replicates.__init__(self,modelname,number,angles)
+    def __init__(self,modelname="test",number=5,angle=30,speeds=[0]):
+        Replicates.__init__(self,modelname,number)
+        self.angle = angle
         self.speeds = speeds
-        self.tunnel.Sting.mount_angle = -15
+        self.tunnel.Sting.mount_angle = 0
         print "reynoldsReplicates object created"
 
     def __del__(self):
@@ -148,10 +149,10 @@ class reynoldsReplicates(Replicates):
     def go(self):
 
         print "Commencing runs."
-        self.currentdir = "C:\\Documents and Settings\\WindTunnel\\Desktop\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
+        self.currentdir = "C:\\Users\\Dudley\\Desktop\\wiggler-junior\\RESULTS\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
         os.mkdir(self.currentdir)
         
-        self.tunnel.Sting.move(30) # set angle
+        self.tunnel.Sting.move(self.angle) # set angle
         time.sleep(5)
 
         print 'Biasing - do not bump'
@@ -170,12 +171,12 @@ class reynoldsReplicates(Replicates):
             print 'Be sure to check wind speed with anemometer'
             time.sleep(self.tunnel.startuptime) # Wait for fan to start up
                     
-            for b in range(97,102):
+            for b in range(self.number):
                
                 print 'Collecting data'
                 y = self.tunnel.DAQ.acquire() # collect the actual points
                 self.tunnel.currentdata = self.tunnel.Cal(y) # apply calibration
-                filename = self.currentdir+chr(b)+self.modelname+"_"+str(dial)+".csv"
+                filename = self.currentdir+self.modelname+"_n"+str(b)+"_a"+str(self.angle)+"_s"+str(dial)+".csv"
                 self.tunnel.save(filename)
     
             print "Completed run at dial {0}".format(a)
@@ -186,4 +187,13 @@ class reynoldsReplicates(Replicates):
         print "Completed {0} runs for {1}".format(self.number, self.modelname)
        # twitterstatus = "Completed {0} runs of {1}.  Please load a new model.".format(self.number, self.modelname)
        # api.update_status(twitterstatus)
-        
+       
+print "***********************"
+print "Diggler-Junior, version 1"
+       
+print "objects are"
+print "Replicates(modelname=\"test\",number=5,angles=range(-15,95,5),speed=0)"
+print "yawReplicates(modelname=\"test\",number=5,angles=range(-30,35,5),speed=0)"
+print "reynoldsReplicates(modelname=\"test\",number=5,angle=30,speeds=[0])"
+print "methods for Replicates are warmup() and go()"
+print "***********************"

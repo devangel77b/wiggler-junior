@@ -67,8 +67,8 @@ void loop()
     startbyte = Serial.read(); // Read first byte
     
     if (startbyte == 255){
-      for (i=0; i<2; i++) {
-        userInput[i] = Serial.read();
+        userInput[0] = Serial.read();
+        userInput[1] = Serial.read();
       }
       
       whichdevice = userInput[0];
