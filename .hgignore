@@ -3,7 +3,8 @@ syntax: glob
 *.DS_Store
 *.csv
 RESULTS\*
-
+*.R~
+*.pdf
 
 
 syntax: regexp
