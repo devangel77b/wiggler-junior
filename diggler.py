@@ -23,6 +23,11 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
+# Open the Command Prompt
+filename = os.environ.get('PYTHONSTARTUP')
+if filename and os.path.isfile(filename):
+    execfile(filename)
+
 # None of these work so I wrote my own. 
 #atidaqft = ctypes.windll.LoadLibrary('C:\\Program Files\\ATI Industrial Automation\\ATIDAQFT.NET\\atidaqft.dll')
 #aticdaqft = ctypes.windll.LoadLibrary('C:\\Program Files\\ATI Industrial Automation\\ATIDAQFT.NET\\ATICombinedDAQFT.dll')
@@ -190,10 +195,10 @@ class reynoldsReplicates(Replicates):
        
 print "***********************"
 print "Diggler-Junior, version 1"
-       
-print "objects are"
-print "Replicates(modelname=\"test\",number=5,angles=range(-15,95,5),speed=0)"
-print "yawReplicates(modelname=\"test\",number=5,angles=range(-30,35,5),speed=0)"
-print "reynoldsReplicates(modelname=\"test\",number=5,angle=30,speeds=[0])"
-print "methods for Replicates are warmup() and go()"
+print ""
+print "Replicate objects you can create are"
+print "> Replicates(modelname=\"test\",number=5,angles=range(-15,95,5),speed=0)"
+print "> yawReplicates(modelname=\"test\",number=5,angles=range(-30,35,5),speed=0)"
+print "> reynoldsReplicates(modelname=\"test\",number=5,angle=30,speeds=[0])"
+print "methods for all Replicates are warmup() and go()"
 print "***********************"
