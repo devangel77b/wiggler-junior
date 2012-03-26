@@ -5,6 +5,10 @@ syntax: glob
 RESULTS\*
 *.R~
 *.pdf
+*.aux
+*.log
+*.synctex.gz
+*~
 
 
 syntax: regexp

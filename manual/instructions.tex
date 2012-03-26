@@ -1,0 +1,117 @@
+\documentclass{article}
+\usepackage{siunitx}
+
+\author{Leonard Carrier and Dennis Evangelista}
+\title{Operating Dirk Wiggler}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Principles of Operation}
+The robotic sting and wind tunnel Dirk Wiggler was implemented using Python and is easy to operate through a simple command line interface.  These instructions give the basic steps. The key difference between the wind tunnel in Haas and previous versions of Dirk Wiggler are higher speed, better flow, and speed control from the Python code. 
+
+\section{Startup and Normal Operation}
+\begin{enumerate}
+\item{Open the Dirk Wiggler folder on the desktop if it is not already open. Check that the wind tunnel switch is {\tt OFF}.}
+
+
+\item{Right click {\tt diggler.py} and select {\bf Edit with IDLE}.  Two windows will open, {\tt diggler.py} and a Python shell.  Go into the Python shell.}
+
+
+\item{To have all of the commands available, import {\tt diggler} as follows:
+\begin{verbatim}
+>>> import diggler
+\end{verbatim}
+}
+
+\item{Now create a {\tt Replicates} object, in which {\tt mymodelname} is the model name of the model under test and the second argument ({\tt 5}) means do five replicates:
+\begin{verbatim}
+>>> myreplicates = diggler.Replicates("mymodelname",5)
+\end{verbatim}
+}
+
+\item{Zero the model and check its position is zero and that it is placed in the tunnel correctly:
+\begin{verbatim}
+>>> myreplicates.tunnel.Sting.gohome()
+\end{verbatim}}
+
+\item{If you are happy with everything, turn the wind tunnel switch to ON and tell the Replicates object to go:
+\begin{verbatim}
+>>> myreplicates.go()
+\end{verbatim}
+It will automatically do \ang{-15} to \ang{90}, 5 replicates, placing them in separate directories on the desktop and using the file naming convention.}
+
+\item{When done, add the directory names into the log.}
+
+\end{enumerate}
+
+
+
+\section{Yaw Measurements}
+Yaw measurements are accomplished in a manner similar to angle-of-attack pitch measurements.
+
+\begin{enumerate}
+\item{Yaw measurements are made with yaw models, which have the sensor exiting the back (dorsal surface); the measurement is to be taken with the model on its side and the servo must be rotated -90 degrees to allow a \ang{-90} to \ang{90} range of yaw angles.}
+
+\item{Open the Dirk Wiggler folder on the desktop if it is not already open. Check that the wind tunnel switch is {\tt OFF}.}
+
+\item{Right click {\tt diggler.py} and select {\bf Edit with IDLE}.  Two windows will open, {\tt diggler.py} and a Python shell.  Go into the Python shell.}
+
+
+\item{To have all of the commands available, import {\tt diggler} as follows:
+\begin{verbatim}
+>>> import diggler
+\end{verbatim}
+}
+
+\item{Now create a {\tt yawReplicates} object, in which {\tt mymodelnameyaw} is the model name of the model under test and the second argument ({\tt 5}) means do five replicates:
+\begin{verbatim}
+>>> myreplicates = diggler.yawReplicates("mymodelnameyaw",5)
+\end{verbatim}
+}
+For ease of processing, please name all yaw tests with the suffix {\tt yaw}, for example {\tt sprawledyaw}, {\tt tentyaw}, {\tt sprawledaoa45yaw}, etc.  The default angle range is \ang{-30} to \ang{30} at \ang{5} increments.  This is the same range as in McCay's work but with finer angular resolution. 
+
+\item{Zero the model and check its position is zero and that it is placed in the tunnel correctly.  If you wish to set an angle of attack, do so by positioning the tripod at an angle to the wind tunnel long axis.  
+
+\begin{verbatim}
+>>> myreplicates.tunnel.Sting.gohome()
+\end{verbatim}}
+
+\item{If you are happy with everything, turn the wind tunnel switch to ON and tell the {\tt yawReplicates} object to go:
+\begin{verbatim}
+>>> myreplicates.go()
+\end{verbatim}
+It will automatically do \ang{-15} to \ang{90}, 5 replicates, placing them in separate directories on the desktop and using the file naming convention.}
+
+\item{When done, add the directory names into the log. To do the next run with the same setup but a different modelname:
+\begin{verbatim}
+>>> myreplicates.modelname = "newmodelnameyaw"
+\end{verbatim}
+}
+
+\end{enumerate}
+
+\section{Reynolds number sweeps}
+Still needs to be implemented.
+
+\section{Operation with sonic anemometer}
+Dennis wants this.  Still needs to be implemented.
+
+\section{Combined angle and speed sweeps}
+Yu Zeng wants this. Still needs to be implemented. 
+
+\section{Implementing controlled speed profile tests}
+Yu Zeng wants this.  Still needs to be implemented.
+
+\section{Transferring data via Dropbox}
+For convenience a Dropbox account has been created using \emph{dudley\_lab at lists.berkeley.edu} as the user name.  The password for this account is \texttt{i8bass4u}.   Space is limited to \SI{500}{MB} so only use this directory to transfer data.  
+
+\section{Working with the Bitbucket repository for code}
+The computer has been configured to push code to the Bitbucket repository using \texttt{ssh}.  We may need to configure multiple keys for different users etc but for now it works. 
+
+\end{document}
+
+
+
+
