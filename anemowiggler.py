@@ -26,6 +26,7 @@ import serial # need to talk to Sonic
 import threading # need to run sonic and ATI Nano17 concurrently
 import time # for timing runs
 import logging # nicer way to log
+logging.basicConfig(level=logging.DEBUG)
 
 
 
