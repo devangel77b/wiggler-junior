@@ -53,7 +53,7 @@ class Anemometer():
         lines = []
         for i in xrange(samples):
             logging.debug("Getting sample {0}".format(i))
-            lines.append(self.ser.readline())
+            lines.append(self.ser.readline(eol='\r'))
             logging.debug("lines is {0}".format(lines))
         print lines
         return lines
