@@ -50,7 +50,7 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
-        lines = ""
+        lines = []
         for i in xrange(samples):
             logging.debug("Getting sample {0}".format(i))
             lines.append("dummy dummy dummy dummy\r\n")
@@ -126,7 +126,8 @@ if __name__ == "__main__":
     trigger.set()
     anem_task.dataready.wait()
     print("\n Got {0} bytes:".format(len(anem_task.data)))
-    print("\n".join(anem_task.data.split("\r")))
+ #   print("\n".join(anem_task.data.split("\r")))
+    print(anem_task.data)
         
     anem_task.shutdown.set()
     print("Pythonic enough for you?")
