@@ -68,20 +68,28 @@ class AnemometerTask(threading.Thread):
     '''AnemometerTask thread for running and triggering an Anemometer'''
     def __init__(self, anem=None, trigger=None, samples=32):
         threading.Thread.__init__(self)
-        self.daemon = True
+        self.daemon = True # allow program to exit with task running
+
         if (anem == None):
             self.anem = Anemometer()
         else: self.anem = anem
         self.samples = samples
-        if (trigger == None):
+
+        # configure signals to this task
+        # can pass an external trigger to the task
+        if (trigger == None): # trigger must be a valid threading.Event
             self.trigger = threading.Event()
         else: self.trigger = trigger
+
+        # every task has a dataready flag, shutdown flag
         self.dataready = threading.Event()
         self.shutdown = threading.Event()
+
+        # initialize signals
         self.trigger.clear()
         self.dataready.clear()
         self.shutdown.clear()
-        self.data = None
+        self.data = None # initialize data
         logging.debug("AnemometerTask {0} created.".format(self.name))
 
     def run(self):
@@ -93,15 +101,18 @@ class AnemometerTask(threading.Thread):
             self.data = self.anem.acquire(self.samples)
             self.dataready.set()
             self.trigger.clear()
+            # loop infinitely checking if triggered and taking data. 
+            # do I have to put a lock on data? 
+            
         logging.debug("AnemometerTask {0} no longer alive".format(self.name))
+        # shutown.is_set() so it's turning off. 
 
 
 
 
 
 
-
-
+# If this is run as main program, do a diagnostic to check that it works. 
 if __name__ == "__main__":
     print("Young 81000 Ultrasonic Anemometer Test Code")
     print("version {0}, dated {1}".format(HGREVISION,HGDATE))
