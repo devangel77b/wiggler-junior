@@ -27,11 +27,7 @@ import threading # need to run sonic and ATI Nano17 concurrently
 import time # for timing runs
 import logging # nicer way to log
 
-# Setup logging to null
-#sonic_nullhandler = logging.NullHandler()
-#sonic_logger = logging.getLogger("sonic").addHandler(sonic_nullhandler)
-slogger = logging.getLogger("sonic")
-slogger.setLevel(logging.DEBUG) 
+
 
 
 
@@ -42,22 +38,22 @@ class Anemometer():
     def __init__(self,port=PORT,baud=BAUD):
         try:
             self.ser = serial.Serial(port, baud, timeout=0.1)
-            slogger.debug("Anemometer connected on {0}.".format(port))
+            logging.debug("Anemometer connected on {0}.".format(port))
         except serial.SerialException:
-            slogger.critical("Anemometer could not connect on {0}, is it connected?".format(port))
+            logging.critical("Anemometer could not connect on {0}, is it connected?".format(port))
             # Yonatan approves of use of .format - 2011-03-31 17:10 PDT
             
         self.devicename = 'Young 81000 Sonic Anemometer'
         self.samplerate = 32
-        slogger.debug("Anemometer created.")
+        logging.debug("Anemometer created.")
 
     def acquire(self,samples=32):
-        slogger.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
+        logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
         return self.ser.read(samples)
 
     def __del__(self):
         del self.ser
-        slogger.debug("Anemometer garbage collected.")
+        logging.debug("Anemometer garbage collected.")
 
 
 
@@ -87,20 +83,20 @@ class AnemometerTask(threading.Thread):
         self.dataready.clear()
         self.shutdown.clear()
         self.data = None # initialize data
-        slogger.debug("AnemometerTask {0} created.".format(self.name))
+        logging.debug("AnemometerTask {0} created.".format(self.name))
 
     def run(self):
-        slogger.debug("AnemometerTask {0} running".format(self.name))
+        logging.debug("AnemometerTask {0} running".format(self.name))
         while not(self.shutdown.is_set()):
             self.trigger.wait()
-            slogger.debug("AnemometerTask {0} triggered at {1}.".format(self.name,time.time()))
+            logging.debug("AnemometerTask {0} triggered at {1}.".format(self.name,time.time()))
             self.dataready.clear()
             self.data = self.anem.acquire(self.samples)
             self.dataready.set()
             self.trigger.clear()
             # loop infinitely checking if triggered and taking data. 
             # do I have to put a lock on data? 
-        slogger.debug("AnemometerTask {0} no longer alive".format(self.name))
+        logging.debug("AnemometerTask {0} no longer alive".format(self.name))
         # shutown.is_set() so it's turning off. 
 
 
