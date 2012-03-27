@@ -23,6 +23,7 @@ HGDATE = '$Date$: today'.split()[1]
 
 
 import serial # need to talk to Sonic
+import io # need this to use /r eol with Sonic
 import threading # need to run sonic and ATI Nano17 concurrently
 import time # for timing runs
 import logging # nicer way to log
@@ -39,6 +40,7 @@ class Anemometer():
     def __init__(self,port=PORT,baud=BAUD):
         try:
             self.ser = serial.Serial(port, baud, timeout=0.1)
+            self.sio = io.TextIOWrapper(io.BufferedReader(self.ser),newline="\r")
             logging.debug("Anemometer connected on {0}.".format(port))
         except serial.SerialException:
             logging.critical("Anemometer could not connect on {0}, is it connected?".format(port))
@@ -50,19 +52,21 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
-        buffer = ""
-        lines = []
-        for i in xrange(samples):
-            buffer = buffer+ser.read(ser.inWaiting())
-            [newline,buffer]=buffer.split("\r")
+        return self.sio.readlines(samples)
+#        buffer = ""
+#        lines = []
+#        for i in xrange(samples):
+#            buffer = buffer+ser.read(ser.inWaiting())
+#            [newline,buffer]=buffer.split("\r")
  #           newline = self.ser.readline(eol="\r")
-            logging.debug("Read line: {0}".format(newline))
-            lines.append(newline)
-        print lines
-        return lines
+#            logging.debug("Read line: {0}".format(newline))
+#            lines.append(newline)
+#        print lines
+#        return lines
 #        return self.ser.read(samples)
 
     def __del__(self):
+        del self.sio
         del self.ser
         logging.debug("Anemometer garbage collected.")
 
