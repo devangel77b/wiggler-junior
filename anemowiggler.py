@@ -38,7 +38,7 @@ class Anemometer():
     '''Anemometer object for interfacing with Young 81000 Sonic Anemometer'''
     def __init__(self,port=PORT,baud=BAUD):
         try:
-            self.ser = serial.Serial(port, baud, timeout=0.1)
+            self.ser = serial.Serial(port, baud, timeout=10)
             logging.debug("Anemometer connected on {0}.".format(port))
         except serial.SerialException:
             logging.critical("Anemometer could not connect on {0}, is it connected?".format(port))
