@@ -50,13 +50,14 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
-        lines = []
-        for i in xrange(samples):
-            logging.debug("Getting sample {0}".format(i))
-            lines.append(self.ser.readline(eol='\r'))
-            logging.debug("lines is {0}".format(lines))
-        print lines
-        return lines
+ #       lines = []
+ #       for i in xrange(samples):
+ #           logging.debug("Getting sample {0}".format(i))
+ #           lines.append(self.ser.readline(eol="\r"))
+ #           logging.debug("lines is {0}".format(lines))
+ #       print lines
+ #       return lines
+        return self.ser.read(samples)
 
     def __del__(self):
         del self.ser
@@ -120,14 +121,14 @@ if __name__ == "__main__":
     anem = Anemometer()
     trigger = threading.Event()
     trigger.clear()
-    anem_task = AnemometerTask(anem,trigger,samples=5)
+    anem_task = AnemometerTask(anem,trigger,samples=1000)
     anem_task.start()
 
     trigger.set()
     anem_task.dataready.wait()
     print("\n Got {0} bytes:".format(len(anem_task.data)))
- #   print("\n".join(anem_task.data.split("\n")))
-    print(anem_task.data)
+    print("\n".join(anem_task.data.split("\r")))
+
         
     anem_task.shutdown.set()
     print("Pythonic enough for you?")
