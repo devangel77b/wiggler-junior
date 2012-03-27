@@ -50,14 +50,17 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
- #       lines = []
- #       for i in xrange(samples):
- #           logging.debug("Getting sample {0}".format(i))
- #           lines.append(self.ser.readline(eol="\r"))
- #           logging.debug("lines is {0}".format(lines))
- #       print lines
- #       return lines
-        return self.ser.read(samples)
+        buffer = ""
+        lines = []
+        for i in xrange(samples):
+ #           buffer = buffer+ser.read(ser.inWaiting())
+ #           [newline,buffer]=buffer.split("\r")
+            newline = ser.readline(eol="\r")
+            logging.debug("Read line: {0}".format(newline))
+            lines.append(newline)
+        print lines
+        return lines
+#        return self.ser.read(samples)
 
     def __del__(self):
         del self.ser
