@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-sonic.py
+anemowiggler.py
 (c) 2011, 2012 Dennis Evangelista
 
 Interface code for connecting to Young 81000 ultrasonic anemometer.
