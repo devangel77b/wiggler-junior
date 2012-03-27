@@ -109,6 +109,13 @@ class AnemometerTask(threading.Thread):
 
 
 
+# need to implement dynamometer
+# need to implement wind tunnel 
+# need to implement turb sensitivity measurement
+
+
+
+
 
 
 # If this is run as main program, do a diagnostic to check that it works. 
