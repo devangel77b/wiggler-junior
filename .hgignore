@@ -2,13 +2,13 @@ syntax: glob
 *.pyc
 *.DS_Store
 *.csv
-RESULTS\*
+RESULTS/*
 *.R~
 *.pdf
 *.aux
 *.log
 *.synctex.gz
 *~
-
+sandbox/*
 
 syntax: regexp
