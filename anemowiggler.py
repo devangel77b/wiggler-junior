@@ -52,12 +52,23 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
+<<<<<<< local
         return self.sio.readlines(samples)
 #        buffer = ""
 #        lines = []
 #        for i in xrange(samples):
 #            buffer = buffer+ser.read(ser.inWaiting())
+=======
+        buffer = ""
+        lines = []
+        for i in xrange(samples):
+#            buffer = buffer+self.ser.read(100)
+>>>>>>> other
 #            [newline,buffer]=buffer.split("\r")
+<<<<<<< local
+=======
+            newline = "0 20 0 23 346 0"
+>>>>>>> other
  #           newline = self.ser.readline(eol="\r")
 #            logging.debug("Read line: {0}".format(newline))
 #            lines.append(newline)
@@ -134,8 +145,8 @@ if __name__ == "__main__":
     trigger.set()
     anem_task.dataready.wait()
     print("\n Got {0} bytes:".format(len(anem_task.data)))
-    print("\n".join(anem_task.data.split("\r")))
-
+    print("\n".join(anem_task.data))
+    
         
     anem_task.shutdown.set()
     print("Pythonic enough for you?")
