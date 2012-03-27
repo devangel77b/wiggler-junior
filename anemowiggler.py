@@ -53,9 +53,9 @@ class Anemometer():
         buffer = ""
         lines = []
         for i in xrange(samples):
- #           buffer = buffer+ser.read(ser.inWaiting())
- #           [newline,buffer]=buffer.split("\r")
-            newline = ser.readline(eol="\r")
+            buffer = buffer+ser.read(ser.inWaiting())
+            [newline,buffer]=buffer.split("\r")
+ #           newline = self.ser.readline(eol="\r")
             logging.debug("Read line: {0}".format(newline))
             lines.append(newline)
         print lines
