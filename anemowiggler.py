@@ -52,29 +52,7 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
-<<<<<<< local
         return self.sio.readlines(samples)
-#        buffer = ""
-#        lines = []
-#        for i in xrange(samples):
-#            buffer = buffer+ser.read(ser.inWaiting())
-=======
-        buffer = ""
-        lines = []
-        for i in xrange(samples):
-#            buffer = buffer+self.ser.read(100)
->>>>>>> other
-#            [newline,buffer]=buffer.split("\r")
-<<<<<<< local
-=======
-            newline = "0 20 0 23 346 0"
->>>>>>> other
- #           newline = self.ser.readline(eol="\r")
-#            logging.debug("Read line: {0}".format(newline))
-#            lines.append(newline)
-#        print lines
-#        return lines
-#        return self.ser.read(samples)
 
     def __del__(self):
         del self.sio
