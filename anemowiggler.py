@@ -40,7 +40,7 @@ class Anemometer():
     def __init__(self,port=PORT,baud=BAUD):
         try:
             self.ser = serial.Serial(port, baud, timeout=0.1)
-            self.sio = io.TextIOWrapper(io.BufferedReader(self.ser),newline="\r")
+            self.sio = io.TextIOWrapper(io.BufferedReader(self.ser),newline='\r')
             logging.debug("Anemometer connected on {0}.".format(port))
         except serial.SerialException:
             logging.critical("Anemometer could not connect on {0}, is it connected?".format(port))
@@ -54,7 +54,7 @@ class Anemometer():
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
         listoflines = []
         for i in xrange(samples):
-            listoflines.append(self.sio.readline(1))
+            listoflines.append(self.sio.readline())
         return listoflines
 
     def __del__(self):
@@ -89,7 +89,7 @@ class AnemometerTask(threading.Thread):
         self.trigger.clear()
         self.dataready.clear()
         self.shutdown.clear()
-        self.data = None # initialize data
+        self.data = [] # initialize data
         logging.debug("AnemometerTask {0} created.".format(self.name))
 
     def run(self):
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     anem = Anemometer()
     trigger = threading.Event()
     trigger.clear()
-    anem_task = AnemometerTask(anem,trigger,samples=1000)
+    anem_task = AnemometerTask(anem,trigger,samples=500)
     anem_task.start()
 
     trigger.set()
