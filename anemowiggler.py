@@ -53,8 +53,9 @@ class Anemometer():
         buffer = ""
         lines = []
         for i in xrange(samples):
-            buffer = buffer+ser.read(ser.inWaiting())
-            [newline,buffer]=buffer.split("\r")
+#            buffer = buffer+self.ser.read(100)
+#            [newline,buffer]=buffer.split("\r")
+            newline = "0 20 0 23 346 0"
  #           newline = self.ser.readline(eol="\r")
             logging.debug("Read line: {0}".format(newline))
             lines.append(newline)
@@ -130,8 +131,8 @@ if __name__ == "__main__":
     trigger.set()
     anem_task.dataready.wait()
     print("\n Got {0} bytes:".format(len(anem_task.data)))
-    print("\n".join(anem_task.data.split("\r")))
-
+    print("\n".join(anem_task.data))
+    
         
     anem_task.shutdown.set()
     print("Pythonic enough for you?")
