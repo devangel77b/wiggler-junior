@@ -15,9 +15,9 @@ PORT = 'COM4' # for Windows7 machine in Haas
 BAUD = 38400
 
 # Mercurial update stuff
-HGAUTHOR = '$Author$'.split()[1]
-HGREVISION = '$Revision$'.split()[1]
-HGDATE = '$Date$'.split()[1]
+HGAUTHOR = '$Author$: devangel'.split()[1]
+HGREVISION = '$Revision$: blah'.split()[1]
+HGDATE = '$Date$: today'.split()[1]
 
 
 
@@ -28,8 +28,8 @@ import time # for timing runs
 import logging # nicer way to log
 
 # Setup logging
-sonic_nullhandler = logging.NullHandler()
-sonic_logger = logging.getLogger("sonic").addHandler(sonic_nullhandler)
+#sonic_nullhandler = logging.NullHandler()
+#sonic_logger = logging.getLogger("sonic").addHandler(sonic_nullhandler)
 
 
 
