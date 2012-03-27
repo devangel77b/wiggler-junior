@@ -52,7 +52,10 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
-        return self.sio.readlines(samples)
+        listoflines = []
+        for i in xrange(samples):
+            listoflines.append(self.sio.readline(1))
+        return listoflines
 
     def __del__(self):
         del self.sio
