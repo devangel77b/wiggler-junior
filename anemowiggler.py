@@ -27,10 +27,11 @@ import threading # need to run sonic and ATI Nano17 concurrently
 import time # for timing runs
 import logging # nicer way to log
 
-# Setup logging
+# Setup logging to null
 #sonic_nullhandler = logging.NullHandler()
 #sonic_logger = logging.getLogger("sonic").addHandler(sonic_nullhandler)
-
+slogger = logging.getLogger("sonic")
+slogger.setLevel(logging.DEBUG) 
 
 
 
@@ -41,22 +42,22 @@ class Anemometer():
     def __init__(self,port=PORT,baud=BAUD):
         try:
             self.ser = serial.Serial(port, baud, timeout=0.1)
-            logging.debug("Anemometer connected on {0}.".format(port))
+            slogger.debug("Anemometer connected on {0}.".format(port))
         except serial.SerialException:
-            logging.critical("Anemometer could not connect on {0}, is it connected?".format(port))
+            slogger.critical("Anemometer could not connect on {0}, is it connected?".format(port))
             # Yonatan approves of use of .format - 2011-03-31 17:10 PDT
             
         self.devicename = 'Young 81000 Sonic Anemometer'
         self.samplerate = 32
-        logging.debug("Anemometer created.")
+        slogger.debug("Anemometer created.")
 
     def acquire(self,samples=32):
-        logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
+        slogger.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
         return self.ser.read(samples)
 
     def __del__(self):
         del self.ser
-        logging.debug("Anemometer garbage collected.")
+        slogger.debug("Anemometer garbage collected.")
 
 
 
@@ -69,42 +70,37 @@ class AnemometerTask(threading.Thread):
     def __init__(self, anem=None, trigger=None, samples=32):
         threading.Thread.__init__(self)
         self.daemon = True # allow program to exit with task running
-
         if (anem == None):
             self.anem = Anemometer()
         else: self.anem = anem
         self.samples = samples
-
         # configure signals to this task
         # can pass an external trigger to the task
         if (trigger == None): # trigger must be a valid threading.Event
             self.trigger = threading.Event()
         else: self.trigger = trigger
-
         # every task has a dataready flag, shutdown flag
         self.dataready = threading.Event()
         self.shutdown = threading.Event()
-
         # initialize signals
         self.trigger.clear()
         self.dataready.clear()
         self.shutdown.clear()
         self.data = None # initialize data
-        logging.debug("AnemometerTask {0} created.".format(self.name))
+        slogger.debug("AnemometerTask {0} created.".format(self.name))
 
     def run(self):
-        logging.debug("AnemometerTask {0} running".format(self.name))
+        slogger.debug("AnemometerTask {0} running".format(self.name))
         while not(self.shutdown.is_set()):
             self.trigger.wait()
-            logging.debug("AnemometerTask {0} triggered at {1}.".format(self.name,time.time()))
+            slogger.debug("AnemometerTask {0} triggered at {1}.".format(self.name,time.time()))
             self.dataready.clear()
             self.data = self.anem.acquire(self.samples)
             self.dataready.set()
             self.trigger.clear()
             # loop infinitely checking if triggered and taking data. 
             # do I have to put a lock on data? 
-            
-        logging.debug("AnemometerTask {0} no longer alive".format(self.name))
+        slogger.debug("AnemometerTask {0} no longer alive".format(self.name))
         # shutown.is_set() so it's turning off. 
 
 
