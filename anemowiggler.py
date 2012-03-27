@@ -38,7 +38,7 @@ class Anemometer():
     '''Anemometer object for interfacing with Young 81000 Sonic Anemometer'''
     def __init__(self,port=PORT,baud=BAUD):
         try:
-            self.ser = serial.Serial(port, baud, timeout=10)
+            self.ser = serial.Serial(port, baud, timeout=0.1)
             logging.debug("Anemometer connected on {0}.".format(port))
         except serial.SerialException:
             logging.critical("Anemometer could not connect on {0}, is it connected?".format(port))
@@ -50,9 +50,12 @@ class Anemometer():
 
     def acquire(self,samples=32):
         logging.debug("Anemometer.acquire() called, obtaining {0} samples.".format(samples))
-        lines = []
-        with self.ser:
-            lines.extend(self.ser.readline() for i in xrange(samples))
+        lines = ""
+        for i in xrange(samples):
+            logging.debug("Getting sample {0}".format(i))
+            lines.append("dummy dummy dummy dummy\r\n")
+            logging.debug("lines is {0}".format(lines))
+        print lines
         return lines
 
     def __del__(self):
@@ -117,7 +120,7 @@ if __name__ == "__main__":
     anem = Anemometer()
     trigger = threading.Event()
     trigger.clear()
-    anem_task = AnemometerTask(anem,trigger,samples=1000)
+    anem_task = AnemometerTask(anem,trigger,samples=5)
     anem_task.start()
 
     trigger.set()
