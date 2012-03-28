@@ -106,13 +106,13 @@ if __name__ == "__main__":
   trigger.set()
   nano_task.dataready.wait()
   print("Got {0} lines:\n".format(len(nano_task.data)))
-  print("\n".join(nano_task.data))
+  print(nano_task.data)
 
   nano_task.nano.setdurations(10)
   trigger.set()
   nano_task.dataready.wait()
   print("Got {0} lines:\n".format(len(nano_task.data)))
-  print("\n".join(nano_task.data))
+  print(nano_task.data)
   
   nano_task.shutdown.set()
   print("Bye bye\n")
