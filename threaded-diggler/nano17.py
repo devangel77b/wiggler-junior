@@ -31,7 +31,7 @@ class Nano17():
     self.samples = samples
 
     self.daq = daq6.DAQcard()
-    self.cal = ati_ft.ATIft("FT7695")
+    self.cal = ati_ft2.ATIft("FT7695")
     logging.debug("Nano17 object created")
 
   def setdurations(self,durations=1):

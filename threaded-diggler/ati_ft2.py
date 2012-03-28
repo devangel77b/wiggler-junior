@@ -10,7 +10,7 @@ class ATIft:
         self.calname = calname
         self.calfilename = self.calname+".cal"
 
-        self.calDOM = xml.dom.minidom.parse(calfilename)
+        self.calDOM = xml.dom.minidom.parse(self.calfilename)
 
         self.calFTSensor = self.calDOM.documentElement
         self.Serial = str(self.calFTSensor.getAttribute("Serial"))
