@@ -9,7 +9,7 @@ Sketch of how sonic anemometer code works.
 import threading
 import time
 import logging
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 PORT = 'COM4'
 BAUD = 38400
@@ -46,7 +46,7 @@ class Anemometer():
       self.samples = samples
     logging.debug("Anemometer.acquire() called, obtaining {0} samples".format(self.samples))
     listoflines = []
-    for i in xrange(samples):
+    for i in xrange(self.samples):
       listoflines.append(self.sio.readline())
     return listoflines
 
@@ -110,16 +110,13 @@ if __name__ == "__main__":
     anem_task = AnemometerTask(anem,trigger)
     anem_task.start()
 
-    trigger.set()
-    anem_task.dataready.wait()
-    print("Got {0} line:\n".format(len(anem_task.data)))
-    print("\n".join(anem_task.data))
 
     anem_task.anem.setdurations(10)
     trigger.set()
     anem_task.dataready.wait()
-    print("Got {0} line:\n".format(len(anem_task.data)))
+    print("Got {0} lines:\n".format(len(anem_task.data)))
     print("\n".join(anem_task.data))
+    anem_task.dataready.clear()
 
     anem_task.shutdown.set()
     print("Bye bye\n")
