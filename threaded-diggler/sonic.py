@@ -17,9 +17,9 @@ import serial
 import io
 
 # Mercurial keywords disabled in Windoze7
-REV = "0"
-DATE = "today"
-AUTHOR = "Dennis Evangelista"
+HGAUTHOR = '$Author$: devangel'.split()[1]
+HGREVISION = '$Revision$: blah'.split()[1]
+HGDATE = '$Date$: today'.split()[1]
 
 class Anemometer():
   '''Anemometer object for interfacing with sonic.'''
@@ -101,8 +101,8 @@ class AnemometerTask(threading.Thread):
 # if run as main, run this diagnostic check
 if __name__ == "__main__":
     print("Young 81000 Ultrasonic Anemometer Test Code")
-    print("version {0}, dated {1}".format(REV,DATE))
-    print("last revised by {0}".format(AUTHOR))
+    print("version {0}, dated {1}".format(HGREVISION,HGDATE))
+    print("last revised by {0}".format(HGAUTHOR))
 
     anem = Anemometer()
     trigger = threading.Event()
