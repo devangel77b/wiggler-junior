@@ -11,6 +11,18 @@ import threading
 import logging
 #logging.basicConfig(level=logging.DEBUG)
 
+# Mercurial keywords disabled in Windoze7
+HGAUTHOR = '$Author$: devangel'.split()[1]
+HGREVISION = '$Revision$: blah'.split()[1]
+HGDATE = '$Date$: today'.split()[1]
+
+
+
+
+
+
+
+
 class WindTunnel():
   '''Anemometer object for interfacing with sonic.'''
   def __init__(self,tunnelready=None):
@@ -65,9 +77,17 @@ class WindTunnel():
     logging.debug("WindTunnel garbage collected")
     
 
+
+
+
+
+
+
 # if run as main, run this diagnostic check
 if __name__ == "__main__":
-    print("WindTunnel sketch code\n")
+    print("WindTunnel test code")
+    print("version {0}, dated {1}".format(HGREVISION,HGDATE))
+    print("last revised by {0}".format(HGAUTHOR))
 
     tunnel = WindTunnel()
     print("tunnel was created")
