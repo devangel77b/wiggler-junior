@@ -49,7 +49,8 @@ class Nano17():
     return cdata    
 
   def bias(self):
-    y = self.daq.acquire(samples=200)
+    logging.critical("Nano17 biasing, do not bump")
+    y = self.daq.acquire(samples=500)
     meany = numpy.mean(y,axis=0)
     self.cal.bias(meany)
 
