@@ -17,6 +17,8 @@ import serial
 import logging
 import time
 
+# logging.basicConfig(level=logging.DEBUG)
+
 # Mercurial keywords disabled in Windoze7
 HGAUTHOR = '$Author$: devangel'.split()[1]
 HGREVISION = '$Revision$: blah'.split()[1]

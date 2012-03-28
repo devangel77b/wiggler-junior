@@ -8,6 +8,7 @@ Sketch of how wind tunnel code works.
 
 import dinosting2
 import threading
+import time
 import logging
 #logging.basicConfig(level=logging.DEBUG)
 
@@ -60,7 +61,7 @@ class WindTunnel():
 #    self.speed = round(speedms*A+B)
 #    check if in range 0 to 255
     self.tunnelready.set()
-    logging.debug("WindTunenl set speed to {0} m/s".format(speedms))
+    logging.critical("NOT IMPLEMENTED: WindTunnel speed NOT set to {0} m/s".format(speedms))
 
   def setangle(self,angle=0):
     '''Set wind tunnel angle in degrees'''
