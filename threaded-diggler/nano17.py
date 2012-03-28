@@ -15,6 +15,12 @@ import time
 import logging
 #logging.basicConfig(level=logging.DEBUG)
 
+# Mercurial keywords disabled in Windoze7?
+HGAUTHOR = '$Author$: devangel'.split()[1]
+HGREVISION = '$Revision$: blah'.split()[1]
+HGDATE = '$Date$: today'.split()[1]
+
+
 class Nano17():
   '''Nano17 object for interfacing with force sensor.'''
   def __init__(self,samples=10):
@@ -87,7 +93,9 @@ class Nano17Task(threading.Thread):
 
 # if run as main, run this diagnostic check
 if __name__ == "__main__":
-  print("Nano17 sketch code\n")
+  print("ATI Nano17 Force Sensor and NI PCI6231 DAQ Test Code ")
+  print("version {0}, dated {1}".format(HGREVISION,HGDATE))
+  print("last revised by {0}".format(HGAUTHOR))
 
   nano = Nano17()
   trigger = threading.Event()
