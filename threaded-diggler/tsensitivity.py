@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 import time
 import os
 #WIGGLERDIR = "~/Dropbox/turbulence-sensitivity-haas/anemo-sketch/RESULTS/"
-WIGGLERDIR = "C:\\Users\\Dudley\\Desktop\\wiggler-junior\\RESULTS\\"
+WIGGLERDIR = "C:\\Users\\Dudley\\Desktop\\"
 
 # Mercurial keywords disabled in Windoze7?
 HGAUTHOR = '$Author$: devangel'.split()[1]

@@ -14,7 +14,7 @@ import numpy
 import threading
 import time
 import logging
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 # Mercurial keywords disabled in Windoze7?
 HGAUTHOR = '$Author$: devangel'.split()[1]
@@ -26,7 +26,7 @@ class Nano17():
   '''Nano17 object for interfacing with force sensor.'''
   def __init__(self,samples=10):
     self.devicename = "ATI Nano17 on NI PCI-6231"
-    self.samplerate = 10000.0
+    self.samplerate = 10000
     self.averaging=16
     self.effsamplerate = self.samplerate/self.averaging
     self.samples = samples
