@@ -6,6 +6,10 @@ nano17.py
 Sketch of how nano17 code works. 
 '''
 
+import daq6
+import ati_ft2
+import numpy
+
 import threading
 import time
 import logging
@@ -14,24 +18,38 @@ import logging
 class Nano17():
   '''Nano17 object for interfacing with force sensor.'''
   def __init__(self,samples=10):
-    self.devicename = "ATI Nano17 on NI PCI-6321"
-    self.samplerate = 10000;
+    self.devicename = "ATI Nano17 on NI PCI-6231"
+    self.samplerate = 10000
+    self.averaging=16
+    self.effsamplerate = self.samplerate/self.averaging
     self.samples = samples
+
+    self.daq = daq6.DAQcard()
+    self.cal = ati_ft.ATIft("FT7695")
     logging.debug("Nano17 object created")
 
   def setdurations(self,durations=1):
     '''Set duration (seconds) of Nano17 measurement'''
-    self.samples = durations*self.samplerate
+    self.samples = durations*self.effsamplerate
+    self.daq.samples = self.samples
     logging.debug("Nano17 duration set to {0} s".format(durations))
 
   def acquire(self,samples=None):
     if (samples!=None):
       self.samples = samples
     logging.debug("Nano17.acquire() called, obtaining {0} samples".format(self.samples))
-    data = ['X Y Z MX MY MZ fs=10000 averaging=16 fake','0 0 0 0 0 0']
-    return data
+    data = self.daq.acquire() # collect the actual points
+    cdata = self.cal(data) # apply calibration
+    return data    
+
+  def bias(self):
+    y = self.daq.acquire(samples=200)
+    meany = numpy.mean(y,axis=0)
+    self.cal.bias(meany)
 
   def __del__(self):
+    self.daq = None
+    self.cal = None
     logging.debug("Nano17 garbage collected")
 
 class Nano17Task(threading.Thread):
