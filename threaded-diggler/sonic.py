@@ -50,6 +50,9 @@ class Anemometer():
       listoflines.append(self.sio.readline())
     return listoflines
 
+  def headertext(self):
+    return "U.mps V.mps W.mps SOS.mps Ts.C ERR\n" 
+
   def __del__(self):
     del self.sio
     del self.ser

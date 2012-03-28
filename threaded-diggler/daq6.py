@@ -1,4 +1,10 @@
 #!/usr/bin/python
+'''
+daq6.py
+(c) 2012 Dennis Evangelista
+
+Updated version of daq5.py for Haas hardware, changes noted. 
+'''
 
 import ctypes
 import numpy
@@ -22,7 +28,7 @@ DAQmx_Val_Cfg_Default = int32(-1)
 DAQmx_Val_Diff = 10106
 DAQmx_Val_Volts = 10348
 DAQmx_Val_Rising = 10280
-DAQmx_Val_RSE = 10083
+DAQmx_Val_RSE = 10083 # NEED TO USE THIS WHEN USING ALTERNATE BOX SETUP
 DAQmx_Val_FiniteSamps = 10178
 DAQmx_Val_GroupByChannel = 0
 DAQmx_Val_GroupByScanNumber = 1
@@ -82,10 +88,12 @@ class DAQcard():
         numread=int32()
 
         logging.debug(" asking for {0} numbers...".format(samples*self.averaging))
-                # Set DAQ sampling frequency
+        # Next line sets DAQ sampling frequency
         CHK(nidaq.DAQmxCfgSampClkTiming(self.taskHandle,"OnboardClock",float64(self.sampling_frequency),
                                         DAQmx_Val_Rising,DAQmx_Val_FiniteSamps,
                                         uInt64(samples*self.averaging+10)))
+        # the last line can cause squirrely results if the samples-per-channel is wrong
+
         CHK(nidaq.DAQmxStartTask(self.taskHandle)) # Start NI DAQ
         CHK(nidaq.DAQmxReadAnalogF64(self.taskHandle, # Use this task
                                      DAQmx_Val_Cfg_Default, # Read until done
@@ -98,6 +106,7 @@ class DAQcard():
         logging.debug("DAQcard acquired {0} numbers for {1} channels, averaging {2}.".format(numread.value, self.nchannels, self.averaging))
 
         # this line does the averaging
+        # had been wrong in previous instances
         for a in range(samples):
             self.data[a] = numpy.mean(temp[(a*self.averaging):((a+1)*self.averaging),:],axis=0)
 
@@ -108,6 +117,7 @@ class DAQcard():
 
             
     def stop(self):
+        '''Kills the DAQ task'''
         CHK(nidaq.DAQmxClearTask(self.taskHandle))
         logging.debug("DAQcard stopped")
 

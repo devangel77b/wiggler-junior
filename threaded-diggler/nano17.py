@@ -3,7 +3,8 @@
 nano17.py
 (c) 2012 Dennis Evangelista
 
-Sketch of how nano17 code works. 
+Updated version of Nano17 plus NI PCI 6231 DAQ
+Now uses threading and logging and incorporates bug fixes
 '''
 
 import daq6
@@ -25,12 +26,12 @@ class Nano17():
   '''Nano17 object for interfacing with force sensor.'''
   def __init__(self,samples=10):
     self.devicename = "ATI Nano17 on NI PCI-6231"
-    self.samplerate = 10000
+    self.samplerate = 10000.0
     self.averaging=16
     self.effsamplerate = self.samplerate/self.averaging
     self.samples = samples
 
-    self.daq = daq6.DAQcard()
+    self.daq = daq6.DAQcard(sampling_frequency=self.samplerate,samples=samples,averaging=self.averaging)
     self.cal = ati_ft2.ATIft("FT7695")
     logging.debug("Nano17 object created")
 
@@ -41,10 +42,10 @@ class Nano17():
     logging.debug("Nano17 duration set to {0} s".format(durations))
 
   def acquire(self,samples=None):
-    if (samples!=None):
-      self.samples = samples
+    if (samples==None):
+      samples == self.samples
     logging.debug("Nano17.acquire() called, obtaining {0} samples".format(self.samples))
-    data = self.daq.acquire() # collect the actual points
+    data = self.daq.acquire(samples=samples) # collect the actual points
     cdata = self.cal(data) # apply calibration
     return cdata    
 
@@ -53,6 +54,9 @@ class Nano17():
     y = self.daq.acquire(samples=500)
     meany = numpy.mean(y,axis=0)
     self.cal.bias(meany)
+
+  def headertext(self):
+    return "Force X (N),Force Y(N),Force Z (N),Torque X (N-mm),Torque Y (N-mm),Torque Z (N-mm),Frequency "+format(self.samplerate)+", Averaging Level = "+format(self.averaging)+", Effective Frequency "+format(self.effsamplerate)+", F/T Sensor = "+format(self.cal.calname)+", Time Started "+time.strftime("%m/%d/%Y %H:%M:%S")+"\n"
 
   def __del__(self):
     self.daq = None
@@ -105,7 +109,6 @@ if __name__ == "__main__":
   nano_task.start()
 
   nano_task.nano.bias()
-  time.sleep(10)
 
   trigger.set()
   nano_task.dataready.wait()

@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+'''
+ati_ft2.py
+(c) 2012 Dennis Evangelista
+
+Updated version of ati_ft for hardware in Haas. Changes noted.  
+'''
+
+# Mercurial keywords disabled in Windoze7?
+HGAUTHOR = '$Author$: devangel'.split()[1]
+HGREVISION = '$Revision$: blah'.split()[1]
+HGDATE = '$Date$: today'.split()[1]
+
 
 import xml.dom.minidom
 import numpy
@@ -6,6 +18,7 @@ import logging
 
 class ATIft:
     def __init__(self,calname="FT7695"):
+        '''Initialize an ATIft calibration object'''
         logging.debug("ATIft object created using "+calname)
         self.calname = calname
         self.calfilename = self.calname+".cal"
@@ -68,14 +81,17 @@ class ATIft:
         self.biasvoltage = numpy.zeros(6)        
 
     def bias(self,x):
+        '''Sets the bias voltage'''
         logging.debug("ATIft setting bias voltage {0}".format(x))
         self.biasvoltage = x
 
     def unbias(self):
+        '''Sets the bias voltage to zero'''
         logging.debug("ATIft clearing bias voltage")
         self.biasvoltage = numpy.zeros(6)
 
     def __call__(self,x):
+        '''Multiplies strain gauges y = A(x-xbias) where A is 6x6 cal matrix'''
         logging.debug("ATIft applying calibration matrix to data")
         return(numpy.transpose(numpy.dot(self.calmatrix,numpy.transpose(x-self.biasvoltage))))
                 

@@ -3,7 +3,7 @@
 tsensitivity.py
 (c) 2012 Dennis Evangelista
 
-Sketch of how turbulence sensitivity measurement works
+Updated for Haas hardware
 '''
 
 import sonic
@@ -17,6 +17,11 @@ import time
 import os
 #WIGGLERDIR = "~/Dropbox/turbulence-sensitivity-haas/anemo-sketch/RESULTS/"
 WIGGLERDIR = "C:\\Users\\Dudley\\Desktop\\wiggler-junior\\RESULTS\\"
+
+# Mercurial keywords disabled in Windoze7?
+HGAUTHOR = '$Author$: devangel'.split()[1]
+HGREVISION = '$Revision$: blah'.split()[1]
+HGDATE = '$Date$: today'.split()[1]
 
 
 
@@ -43,7 +48,7 @@ class Measurement():
         # Set model for next measurement
         self.tunnel.setangle(angle)
         self.tunnel.tunnelready.wait() # wait for servo to settle
-        # bias sensor here
+        self.nano_task.nano.bias()
 
         # Set duration and start tunnel
         self.anem_task.anem.setdurations(durations)
@@ -64,9 +69,24 @@ class Measurement():
         logging.debug("Measurement.take() completed, coasting down")
 
     def save(self,path,nfilename,afilename):
-        logging.debug("Measurement.save() write nano data to "+path+nfilename)
-        logging.debug("Measurement.save() write anem data to "+path+afilename)
         logging.debug("Measurement.save() called")
+
+        logging.debug("Measurement.save() writing nano data to "+path+nfilename)
+        f = open(path+nfilename,"w")
+        f.write(self.nano_task.nano.headertext())
+        numpy.savetxt(f,self.nanodata,delimiter=",")
+        f.close
+        logging.debug("     data saved to "+path+nfilename)
+
+        logging.debug("Measurement.save() write anem data to "+path+afilename)
+        f = open(path+afilename,"w")
+        f.write(self.anem_task.anem.headertext())
+        f.write("\n".join(anem_task.data))
+        f.close
+        logging.debug("     data saved to "+path+afilename)
+
+        logging.debug("Measurement.save() completed")
+
 
     def __del__(self):
         self.nano_task.shutdown.set()
@@ -87,7 +107,7 @@ class Measurement():
 
 class Replicates():
     '''Replicates object for running turbulence sensitivity measurements'''
-    def __init__(self,modelname="test",number=1,angles=[0],speeds=range(0,255,50),durations=10):
+    def __init__(self,modelname="test",number=1,angles=[0],speeds=range(0,255,50),durations=30):
         self.modelname = modelname
         self.number = number
         self.angles = angles
@@ -103,7 +123,7 @@ class Replicates():
 
     def setcurdirname(self):
         self.curdirname = WIGGLERDIR+time.strftime("%Y%m%d%H%M%S")+"\\"
-        #os.mkdir(self.curdirname)
+        os.mkdir(self.curdirname)
         logging.debug("Replicates.setcurdirname set to {0}".format(self.curdirname))
 
     def setfilenames(self,angle=0,speed=0):
@@ -141,7 +161,10 @@ class Replicates():
 
 # if run as main, run this diagnostic check
 if __name__ == "__main__":
-    print("tsensitivity sketch code\n")
+    print("Turbulence Sensitivity Test Code")
+    print("version {0}, dated {1}".format(HGREVISION,HGDATE))
+    print("last revised by {0}".format(HGAUTHOR))
+
 
     measurement = Measurement()
     measurement.take()
