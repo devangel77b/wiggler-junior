@@ -22,6 +22,7 @@ DAQmx_Val_Cfg_Default = int32(-1)
 DAQmx_Val_Diff = 10106
 DAQmx_Val_Volts = 10348
 DAQmx_Val_Rising = 10280
+DAQmx_Val_RSE = 10083
 DAQmx_Val_FiniteSamps = 10178
 DAQmx_Val_GroupByChannel = 0
 DAQmx_Val_GroupByScanNumber = 1
@@ -55,7 +56,7 @@ class DAQcard():
         CHK(nidaq.DAQmxCreateAIVoltageChan(self.taskHandle,
                                            "Dev1/ai0, Dev1/ai1, Dev1/ai2, Dev1/ai3, Dev1/ai4, Dev1/ai5",
                                            "SG0, SG1, SG2, SG3, SG4, SG5",
-                                           DAQmx_Val_Diff,
+                                           DAQmx_Val_RSE,
                                            float64(-10.0),float64(10.0),
                                            DAQmx_Val_Volts, None))
         
@@ -72,10 +73,9 @@ class DAQcard():
     
     def acquire(self, samples=None):
         '''Acquires samples samples.'''
-        logging.debug("DAQcard acquiring")
         if samples is None:
             samples = self.samples
-        print 'Acquiring %d samples...'%(samples)
+        logging.debug("DAQcard acquiring {0} samples...".format(samples))
         self.data = numpy.zeros((samples,self.nchannels),dtype=numpy.float64)
         temp = numpy.zeros((samples*self.averaging,self.nchannels),dtype=numpy.float64)
         
@@ -84,13 +84,13 @@ class DAQcard():
         CHK(nidaq.DAQmxStartTask(self.taskHandle)) # Start NI DAQ
         CHK(nidaq.DAQmxReadAnalogF64(self.taskHandle, # Use this task
                                      DAQmx_Val_Cfg_Default, # Read until done
-                                     float64(60.0), # Time out after 60 s
+                                     float64(1800.0), # Time out after 30 min
                                      DAQmx_Val_GroupByScanNumber, # Don't interleave
                                      temp.ctypes.data, # Place in temp
                                      samples*self.nchannels*self.averaging, # Read this many samples
                                      ctypes.byref(numread), # Tell me how many I got
                                      None))
-        logging.debug("DAQcard acquired {0} samples for{1} channels, averaging {2}.".format(numread.value, self.nchannels, self.averaging))
+        logging.debug("DAQcard acquired {0} numbers for {1} channels, averaging {2}.".format(numread.value, self.nchannels, self.averaging))
 
         # this line does the averaging
         for a in range(samples):

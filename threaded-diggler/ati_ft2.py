@@ -68,8 +68,7 @@ class ATIft:
         self.biasvoltage = numpy.zeros(6)        
 
     def bias(self,x):
-        logging.debug("ATIft setting bias voltage")
-        print x
+        logging.debug("ATIft setting bias voltage {0}".format(x))
         self.biasvoltage = x
 
     def unbias(self):

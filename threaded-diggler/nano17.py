@@ -13,7 +13,7 @@ import numpy
 import threading
 import time
 import logging
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 # Mercurial keywords disabled in Windoze7?
 HGAUTHOR = '$Author$: devangel'.split()[1]
@@ -46,7 +46,7 @@ class Nano17():
     logging.debug("Nano17.acquire() called, obtaining {0} samples".format(self.samples))
     data = self.daq.acquire() # collect the actual points
     cdata = self.cal(data) # apply calibration
-    return data    
+    return cdata    
 
   def bias(self):
     y = self.daq.acquire(samples=200)
@@ -103,16 +103,20 @@ if __name__ == "__main__":
   nano_task = Nano17Task(nano,trigger)
   nano_task.start()
 
+  #nano_task.nano.bias()
+
   trigger.set()
   nano_task.dataready.wait()
   print("Got {0} lines:\n".format(len(nano_task.data)))
   print(nano_task.data)
+  nano_task.dataready.clear()
 
   nano_task.nano.setdurations(10)
   trigger.set()
   nano_task.dataready.wait()
   print("Got {0} lines:\n".format(len(nano_task.data)))
   print(nano_task.data)
+  nano_task.dataready.clear()
   
   nano_task.shutdown.set()
   print("Bye bye\n")
