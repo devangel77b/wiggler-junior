@@ -104,7 +104,7 @@ if __name__ == "__main__":
   nano_task = Nano17Task(nano,trigger)
   nano_task.start()
 
-  #nano_task.nano.bias()
+  nano_task.nano.bias()
 
   trigger.set()
   nano_task.dataready.wait()
