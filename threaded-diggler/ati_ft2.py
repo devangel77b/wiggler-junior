@@ -76,6 +76,7 @@ class ATIft:
         self.biasvoltage = numpy.zeros(6)
 
     def __call__(self,x):
+        logging.debug("ATIft applying calibration matrix to data")
         return(numpy.transpose(numpy.dot(self.calmatrix,numpy.transpose(x-self.biasvoltage))))
                 
     def __del__(self):

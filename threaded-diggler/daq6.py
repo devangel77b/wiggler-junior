@@ -75,12 +75,17 @@ class DAQcard():
         '''Acquires samples samples.'''
         if samples is None:
             samples = self.samples
-        logging.debug("DAQcard acquiring {0} samples...".format(samples))
+        logging.debug("DAQcard acquiring {0} lines...".format(samples))
         self.data = numpy.zeros((samples,self.nchannels),dtype=numpy.float64)
         temp = numpy.zeros((samples*self.averaging,self.nchannels),dtype=numpy.float64)
         
         numread=int32()
 
+        logging.debug(" asking for {0} numbers...".format(samples*self.averaging))
+                # Set DAQ sampling frequency
+        CHK(nidaq.DAQmxCfgSampClkTiming(self.taskHandle,"OnboardClock",float64(self.sampling_frequency),
+                                        DAQmx_Val_Rising,DAQmx_Val_FiniteSamps,
+                                        uInt64(samples*self.averaging+10)))
         CHK(nidaq.DAQmxStartTask(self.taskHandle)) # Start NI DAQ
         CHK(nidaq.DAQmxReadAnalogF64(self.taskHandle, # Use this task
                                      DAQmx_Val_Cfg_Default, # Read until done

@@ -105,13 +105,15 @@ if __name__ == "__main__":
   nano_task.start()
 
   nano_task.nano.bias()
+  time.sleep(10)
 
   trigger.set()
   nano_task.dataready.wait()
   print("Got {0} lines:\n".format(len(nano_task.data)))
   print(nano_task.data)
   nano_task.dataready.clear()
-
+  time.sleep(10)
+  
   nano_task.nano.setdurations(10)
   trigger.set()
   nano_task.dataready.wait()
