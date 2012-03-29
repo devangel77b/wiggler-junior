@@ -132,7 +132,7 @@ class Replicates():
     def setfilenames(self,angle=0,speed=0):
         temp = self.modelname+"_a"+format(angle)+"_s"+format(speed)
         self.nfilename = temp+"_nano.csv"
-        self.afilename = temp+"_anem.csv"
+        self.afilename = temp+"_anem.txt"
         logging.debug("Replicates.setfilenames to "+temp)
         
     def go(self):
@@ -148,7 +148,7 @@ class Replicates():
                     self.setfilenames(angcounter,spdcounter)
                     self.meas.take(spdcounter,angcounter,self.durations)
                     self.meas.save(self.curdirname,self.nfilename,self.afilename)
-                    logging.info("     angle {0} degrees - speed {0}/255 units".format(angcounter,spdcounter))
+                    logging.info("     angle {0} degrees - speed {1}/255 units".format(angcounter,spdcounter))
             logging.info("Completed replicate {0}".format(repcounter+1))
         logging.info("Completed {0} replicates for model {1}, coasting down.".format(self.number, self.modelname))                   
   
