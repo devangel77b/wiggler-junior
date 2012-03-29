@@ -15,6 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 import time
 import os
+import numpy
 #WIGGLERDIR = "~/Dropbox/turbulence-sensitivity-haas/anemo-sketch/RESULTS/"
 WIGGLERDIR = "C:\\Users\\Dudley\\Desktop\\"
 
@@ -77,13 +78,15 @@ class Measurement():
         numpy.savetxt(f,self.nanodata,delimiter=",")
         f.close
         logging.debug("     data saved to "+path+nfilename)
+        self.nano_task.dataready.clear()
 
         logging.debug("Measurement.save() write anem data to "+path+afilename)
         f = open(path+afilename,"w")
         f.write(self.anem_task.anem.headertext())
-        f.write("\n".join(anem_task.data))
+        f.write("\n".join(self.anem_task.data))
         f.close
         logging.debug("     data saved to "+path+afilename)
+        self.anem_task.dataready.clear()
 
         logging.debug("Measurement.save() completed")
 
@@ -118,7 +121,7 @@ class Replicates():
         self.nfilename = "default_nano.csv"
         self.afilename = "default_anem.csv"
 
-        self.meas = Measurement()
+        self.meas = Measurement(durations=durations)
         logging.debug("Replicates object created")
 
     def setcurdirname(self):
@@ -166,10 +169,7 @@ if __name__ == "__main__":
     print("last revised by {0}".format(HGAUTHOR))
 
 
-    measurement = Measurement()
-    measurement.take()
-    measurement.save("foo","nanobar","anembar")
-    measurement = None
+ 
 
     replicates = Replicates()
     replicates.go()

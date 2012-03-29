@@ -37,7 +37,7 @@ class WindTunnel():
     self.speed = 0
     self.angle = 0
     self.fandelay = 15
-    self.servodelay = 5
+    self.servodelay = 1
 
     self.setspeed(self.speed)
     self.setangle(self.angle)

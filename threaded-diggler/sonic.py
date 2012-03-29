@@ -46,9 +46,9 @@ class Anemometer():
       self.samples = samples
     logging.debug("Anemometer.acquire() called, obtaining {0} samples".format(self.samples))
     listoflines = []
-    for i in xrange(self.samples):
+    for i in xrange(self.samples+1):
       listoflines.append(self.sio.readline())
-    return listoflines
+    return listoflines[1:len(listoflines)]
 
   def headertext(self):
     return "U.mps V.mps W.mps SOS.mps Ts.C ERR\n" 
