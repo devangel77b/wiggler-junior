@@ -17,7 +17,7 @@ import time
 import os
 import numpy
 #WIGGLERDIR = "~/Dropbox/turbulence-sensitivity-haas/anemo-sketch/RESULTS/"
-WIGGLERDIR = "C:\\Users\\Dudley\\Desktop\\"
+WIGGLERDIR = "C:\\Users\\Dudley\\Dropbox\\data\\"
 
 # Mercurial keywords disabled in Windoze7?
 HGAUTHOR = '$Author$: devangel'.split()[1]
