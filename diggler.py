@@ -115,7 +115,7 @@ class Replicates:
                 self.tunnel.takedata(self.speed,b)
                 filename = self.currentdir+self.modelname+"_n"+str(a)+"_a"+str(b)+"_s"+str(self.speed)+".csv"
                 self.tunnel.save(filename)
-            print "Completed run {0}".format(a+1)
+            print "Completed run {0}".format(a)
     #        twitterstatus = "Completed replicate {0} of {1} for {2}".format(a+1,self.number, self.modelname)
     #        api.update_status(twitterstatus)
 
@@ -146,6 +146,7 @@ class reynoldsReplicates(Replicates):
         self.angle = angle
         self.speeds = speeds
         self.tunnel.Sting.mount_angle = 0
+        self.tunnel.Sting.move(0)
         print "reynoldsReplicates object created"
 
     def __del__(self):
@@ -193,12 +194,68 @@ class reynoldsReplicates(Replicates):
        # twitterstatus = "Completed {0} runs of {1}.  Please load a new model.".format(self.number, self.modelname)
        # api.update_status(twitterstatus)
        
+class multiReplicates(Replicates):
+    def __init__(self,modelname="test",number=5,angles=range(0,181,10),speeds=[0]):
+        Replicates.__init__(self,modelname,number)
+        self.angles = angles
+        self.speeds = speeds
+        self.tunnel.Sting.mount_angle = 0
+        self.tunnel.Sting.move(0)
+        print "reynoldsReplicates object created"
+
+    def __del__(self):
+        print "Garbage collecting reynolds replicates object"
+
+    def go(self):
+
+        print "Commencing runs."
+        self.currentdir = "C:\\Users\\Dudley\\Desktop\\wiggler-junior\\RESULTS\\"+time.strftime("%Y%m%d%H%M%S")+"\\"
+        os.mkdir(self.currentdir)
+        
+        print 'Biasing - do not bump'
+        y = self.tunnel.DAQ.acquire(samples=100) # zero the sensor
+        meany = numpy.mean(y, axis=0)
+        self.tunnel.Cal.bias(meany)
+
+        for a in range(len(self.speeds)):
+            for b in self.angles:
+                # print "Please set dial to %d."%(a)
+                # dial = int(raw_input('dial = ?'))
+                
+                self.tunnel.Sting.move(b); # set angle
+                time.sleep(5)
+                
+                dial = self.speeds[a]
+
+                self.tunnel.Sting.fan(dial) # turn on the fan
+                print 'Waiting %d seconds for fan to startup' %(self.tunnel.startuptime)
+                print 'Be sure to check wind speed with anemometer'
+                time.sleep(self.tunnel.startuptime) # Wait for fan to start up
+                        
+                for c in range(self.number):
+                   
+                    print 'Collecting data'
+                    y = self.tunnel.DAQ.acquire() # collect the actual points
+                    self.tunnel.currentdata = self.tunnel.Cal(y) # apply calibration
+                    filename = self.currentdir+self.modelname+"_n"+str(c)+"_a"+str(b)+"_s"+str(dial)+".csv"
+                    self.tunnel.save(filename)
+        
+                print "Completed run at dial {0} and angle {1}".format(a,b)
+    
+        self.tunnel.Sting.fan(0) # secure fan
+        print 'Data collected, coasting down'
+        time.sleep(17)
+        print "Completed {0} runs for {1}".format(self.number, self.modelname)
+       # twitterstatus = "Completed {0} runs of {1}.  Please load a new model.".format(self.number, self.modelname)
+       # api.update_status(twitterstatus)
+       
 print "***********************"
-print "Diggler-Junior, version 1"
+print "Diggler-Junior, version 2"
 print ""
 print "Replicate objects you can create are"
 print "> Replicates(modelname=\"test\",number=5,angles=range(-15,95,5),speed=0)"
 print "> yawReplicates(modelname=\"test\",number=5,angles=range(-30,35,5),speed=0)"
 print "> reynoldsReplicates(modelname=\"test\",number=5,angle=30,speeds=[0])"
+print "> multiReplicates(modelname=\"test\",number=5,angle=range(0,181,10),speeds=[0])"
 print "methods for all Replicates are warmup() and go()"
 print "***********************"
