@@ -36,7 +36,7 @@ class WindTunnel():
     self.sting = dinosting2.DinoSting(mount_angle=0)
     self.speed = 0
     self.angle = 0
-    self.fandelay = 15
+    self.fandelay = 30
     self.servodelay = 1
 
     self.setspeed(self.speed)
